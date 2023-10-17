@@ -12,7 +12,7 @@ public class ResponseDto<D> {
     private D data;
 
     public static <D> ResponseDto<D> setSuccess(String message, D data) {
-        return ResponseDto.set(false, message, data);
+        return ResponseDto.set(true, message, data);
     }
 
     public static <D> ResponseDto<D> setFailed(String message) {
