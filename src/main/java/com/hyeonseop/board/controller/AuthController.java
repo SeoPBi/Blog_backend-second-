@@ -1,9 +1,9 @@
 package com.hyeonseop.board.controller;
 
-import com.hyeonseop.board.DTO.ResponseDto;
-import com.hyeonseop.board.DTO.SignInDto;
-import com.hyeonseop.board.DTO.SignInResponseDto;
-import com.hyeonseop.board.DTO.SignUpDto;
+import com.hyeonseop.board.dto.ResponseDto;
+import com.hyeonseop.board.dto.SignInDto;
+import com.hyeonseop.board.dto.SignInResponseDto;
+import com.hyeonseop.board.dto.SignUpDto;
 import com.hyeonseop.board.service.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;

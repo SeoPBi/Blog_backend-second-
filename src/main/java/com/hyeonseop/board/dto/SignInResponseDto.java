@@ -1,4 +1,4 @@
-package com.hyeonseop.board.DTO;
+package com.hyeonseop.board.dto;
 
 import com.hyeonseop.board.entity.UserEntity;
 import lombok.AllArgsConstructor;

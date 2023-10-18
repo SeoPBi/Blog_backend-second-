@@ -1,13 +1,15 @@
 package com.hyeonseop.board.service;
 
-import com.hyeonseop.board.DTO.ResponseDto;
-import com.hyeonseop.board.DTO.SignInDto;
-import com.hyeonseop.board.DTO.SignInResponseDto;
-import com.hyeonseop.board.DTO.SignUpDto;
+import com.hyeonseop.board.dto.ResponseDto;
+import com.hyeonseop.board.dto.SignInDto;
+import com.hyeonseop.board.dto.SignInResponseDto;
+import com.hyeonseop.board.dto.SignUpDto;
 import com.hyeonseop.board.Repository.UserRepository;
 import com.hyeonseop.board.Secure.TokenProvider;
 import com.hyeonseop.board.entity.UserEntity;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -18,6 +20,8 @@ public class AuthService {
 
     @Autowired
     TokenProvider tokenProvider;
+
+    private PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
     public ResponseDto<?> signUp(SignUpDto dto){
         String userEmail = dto.getUserEmail();
@@ -39,6 +43,10 @@ public class AuthService {
         // UserEntity 생성
         UserEntity userEntity = new UserEntity(dto);
 
+        // 비밀번호 암호화
+        String encodedpaasword = passwordEncoder.encode(userPassword);
+        userEntity.setUserPassword(encodedpaasword);
+
         // UserRepository를 이용해서 데이터베이스 Entity 저장!!
         try {
             userRepository.save(userEntity);
@@ -54,15 +62,14 @@ public class AuthService {
         String userEmail = dto.getUserEmail();
         String userPassword = dto.getUserPassword();
 
+        UserEntity userEntity = null ;
         try {
-            boolean existed = userRepository.existsByUserEmailAndUserPassword(userEmail, userPassword);
-            if (!existed) return ResponseDto.setFailed("Sign In Information does not Match");
-        } catch (Exception error) {
-            return ResponseDto.setFailed("Database Error");
-        }
-        UserEntity userEntity = null;
-        try {
-            userEntity = userRepository.findById(userEmail).get();
+            userEntity = userRepository.findByUserEmail(userEmail);
+            // 잘못된 이메일
+            if (userEntity == null ) return ResponseDto.setFailed("Sign in Failed");
+            // 잘못된 패스워드
+            if (!passwordEncoder.matches(userPassword, userEntity.getUserPassword()))
+                return ResponseDto.setFailed("Sign in Failed");
         } catch (Exception error) {
             return ResponseDto.setFailed("Database Error");
         }
@@ -76,3 +83,4 @@ public class AuthService {
         return ResponseDto.setSuccess("Sign in Success", signInResponseDto);
     }
 }
+

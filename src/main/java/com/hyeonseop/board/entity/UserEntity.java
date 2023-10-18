@@ -1,6 +1,6 @@
 package com.hyeonseop.board.entity;
 
-import com.hyeonseop.board.DTO.SignUpDto;
+import com.hyeonseop.board.dto.SignUpDto;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
